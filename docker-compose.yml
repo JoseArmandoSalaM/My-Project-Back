@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+        POSTGRES_USER: armando
+        POSTGRES_PASSWORD: 1234567
+        POSTGRES_DB: fullstack
+    ports:
+      - 5499:5432

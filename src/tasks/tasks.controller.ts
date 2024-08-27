@@ -8,14 +8,11 @@ export class TasksController {
   constructor(private tasksService: TasksService) {}
 
   @Post()
-  create(@Body() createTaskDto: CreateTaskDto) {
+  async create(@Body() createTaskDto: CreateTaskDto) {
     try {
-      return this.tasksService.create(createTaskDto);
+      return await this.tasksService.create(createTaskDto);
     } catch (error) {
-      if(error.code === 11000){
         throw new ConflictException('Task already exists');
-      }
-      throw error;
     }
   }
 

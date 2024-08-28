@@ -14,11 +14,20 @@ datasource db {
 }
 
 model User {
-  id   String @id @default(uuid())
-  Name String @unique
+  id            String    @id @default(uuid())
+  name          String
+  email         String    @unique
+  password      String
+  emailverified DateTime?
+  role          Role      @default(user)
 
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt
+}
+
+enum Role {
+  admin
+  user
 }
 
 model Task {

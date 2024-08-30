@@ -7,6 +7,8 @@ import { AuthGuard } from './guard/auth.guard';
 import { Request } from 'express';
 import { Role } from 'src/enums/role.enum';
 import { Auth } from './decorators/auth.decorator';
+import { ActiveUser } from './decorators/active-user.decorator';
+import { UserActiveInterface } from 'src/interfaces/user-active.interface';
 
 
 
@@ -36,11 +38,11 @@ export class AuthController {
 
    
   @Get('profile')
-  @Auth(Role.USER)
+  @Auth(Role.USER, Role.ADMIN)
   // @Roles(Role.ADMIN)
   // @UseGuards(AuthGuard, RolesGuard)
-  profile(@Req() req: RequesWithUser){
-    return this.authService.profile(req);
+  profile(@ActiveUser() user: RequesWithUser){
+    return this.authService.profile(user);
   }
 
   

@@ -34,11 +34,20 @@ export class AuthService {
      }
     });
 
-    return {name, email};
+    const payload = {email: create.email, role: create.role};
+    const token = await this.jwtService.signAsync(payload);
+
+    return {name, email, token};
   }
 
   async findAll() {
-    return await this.prisma.user.findMany();
+    return await this.prisma.user.findMany({
+      select:{
+        name: true,
+        email: true,
+        role: true,
+      }
+    });
   }
 
   async findOne(id: string) {
@@ -83,7 +92,6 @@ export class AuthService {
     const payload = {email: user.email, role: user.role};
 
     const token = await this.jwtService.signAsync(payload);
-
     return {
       token,
       email
@@ -92,6 +100,6 @@ export class AuthService {
   }
 
   async profile(req: RequesWithUser){
-    return req.user;
+    return req;
   }
 }

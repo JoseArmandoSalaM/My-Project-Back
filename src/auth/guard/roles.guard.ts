@@ -1,6 +1,5 @@
 import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import { Observable } from "rxjs";
 import { ROLES_KEY } from "../decorators/roles.decorator";
 import { Role } from "src/enums/role.enum";
 
@@ -13,7 +12,7 @@ export class RolesGuard implements CanActivate{
 
 canActivate(context: ExecutionContext): boolean{
     
-    const role = this.reflector.getAllAndOverride<Role>(ROLES_KEY, [
+    const role = this.reflector.getAllAndOverride<Role[]>(ROLES_KEY, [
         context.getHandler(),
         context.getClass(),
     ]);
@@ -24,6 +23,6 @@ canActivate(context: ExecutionContext): boolean{
 
     const {user} = context.switchToHttp().getRequest();
 
-    return role === user.role;
+    return role.some((role) => user.role?.includes(role));;
 }
 }

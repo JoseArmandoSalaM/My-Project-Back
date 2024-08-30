@@ -5,6 +5,7 @@ import { PrismaService } from 'src/prisma.service';
 import * as bcryptjs from 'bcryptjs';
 import { LoginDto } from './dto/login-auth';
 import { JwtService } from '@nestjs/jwt';
+import { RequesWithUser } from './auth.controller';
 
 @Injectable()
 export class AuthService {
@@ -25,13 +26,15 @@ export class AuthService {
       throw new BadRequestException('User Already exists')
     }
 
-    return await this.prisma.user.create({
+    const create =  await this.prisma.user.create({
      data:{
        name,
        email,
        password: await bcryptjs.hash(password, 10)
      }
     });
+
+    return {name, email};
   }
 
   async findAll() {
@@ -77,7 +80,7 @@ export class AuthService {
       throw new UnauthorizedException('password is wrong');
     }
 
-    const payload = {email: user.email};
+    const payload = {email: user.email, role: user.role};
 
     const token = await this.jwtService.signAsync(payload);
 
@@ -86,5 +89,9 @@ export class AuthService {
       email
     };
 
+  }
+
+  async profile(req: RequesWithUser){
+    return req.user;
   }
 }

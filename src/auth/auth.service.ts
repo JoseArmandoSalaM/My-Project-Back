@@ -5,7 +5,7 @@ import { PrismaService } from 'src/prisma.service';
 import * as bcryptjs from 'bcryptjs';
 import { LoginDto } from './dto/login-auth';
 import { JwtService } from '@nestjs/jwt';
-import { RequesWithUser } from './auth.controller';
+import { UserActiveInterface } from 'src/interfaces/user-active.interface';
 
 @Injectable()
 export class AuthService {
@@ -99,7 +99,18 @@ export class AuthService {
 
   }
 
-  async profile(req: RequesWithUser){
-    return req;
+  async profile({ email, role }: { email: string; role: string }){
+  return this.prisma.user.findFirstOrThrow({
+    where: {
+      email
+    },
+    select:{
+      name: true,
+      email: true,
+      role: true,
+      createAt: true,
+      updateAt: true,
+    }
+  })
   }
 }

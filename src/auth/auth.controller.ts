@@ -13,13 +13,6 @@ import { UserActiveInterface } from 'src/interfaces/user-active.interface';
 
 
 
-export interface RequesWithUser extends Request{
-    user: {
-      email: string;
-      role: string;
-    }
-  }
-
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -41,19 +34,20 @@ export class AuthController {
   @Auth(Role.USER, Role.ADMIN)
   // @Roles(Role.ADMIN)
   // @UseGuards(AuthGuard, RolesGuard)
-  profile(@ActiveUser() user: RequesWithUser){
+  profile(@ActiveUser() user: UserActiveInterface){
     return this.authService.profile(user);
   }
 
   
   @Get(':id')
-  @UseGuards(AuthGuard)
+  @Auth(Role.USER, Role.ADMIN)
   findOne(@Param('id') id: string) {
     return this.authService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
+  @Auth(Role.USER, Role.ADMIN)
+  update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto, @ActiveUser() user: UserActiveInterface) {
     return this.authService.update(id, updateAuthDto);
   }
 

@@ -34,10 +34,11 @@ export class AuthService {
      }
     });
 
-    const payload = {email: create.email, role: create.role};
-    const token = await this.jwtService.signAsync(payload);
-
-    return {name, email, token};
+    const log = await this.login({
+      email: email,
+      password: password
+    })
+    return log;
   }
 
   async findAll() {

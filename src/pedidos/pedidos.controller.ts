@@ -26,16 +26,31 @@ export class PedidosController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.pedidosService.findOne(+id);
+    const user = this.pedidosService.findOne(id);
+
+    if(!user) return 'No se encontro el pedido';
+
+    return user;
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePedidoDto: UpdatePedidoDto) {
-    return this.pedidosService.update(+id, updatePedidoDto);
+
+    try {
+      return this.pedidosService.update(id, updatePedidoDto);
+    } catch (error) {
+      return 'Error';
+    }
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.pedidosService.remove(+id);
+  async remove(@Param('id') id: string) {
+
+    try {
+      const user = await this.pedidosService.remove(id);
+      return 'Success';
+    } catch (error) {
+      return 'Error';
+    }
   }
 }

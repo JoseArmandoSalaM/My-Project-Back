@@ -25,15 +25,37 @@ export class PedidosService {
     return this.prisma.pedidos.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} pedido`;
+  findOne(id: string) {
+    return this.prisma.pedidos.findFirst({
+      where: {id},
+      include: {
+        User: {
+          select:{
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+          }
+        }
+      }
+    })
   }
 
-  update(id: number, updatePedidoDto: UpdatePedidoDto) {
-    return `This action updates a #${id} pedido`;
+  update(id: string, dto: UpdatePedidoDto) {
+    return this.prisma.pedidos.update({
+      where: {id},
+      data: {
+        Status: dto.Status,
+        Fecha_devolucion: dto.Fecha_devolucion,
+      }
+    })
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} pedido`;
+  remove(id: string) {
+    return this.prisma.pedidos.delete({
+      where: {
+        id
+      }
+    });
   }
 }

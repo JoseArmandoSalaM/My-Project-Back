@@ -40,8 +40,13 @@ export class AuthController {
   
   @Get(':id')
   @Auth(Role.USER, Role.ADMIN)
-  findOne(@Param('id') id: string) {
-    return this.authService.findOne(id);
+  async findOne(@Param('id') id: string) {
+  
+    const user =  await this.authService.findOne(id);
+
+    if(!user) return 'Error';
+
+    return user;
   }
 
   @Patch(':id')
@@ -51,8 +56,12 @@ export class AuthController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(id);
+  async remove(@Param('id') id: string) {
+    try {
+      return await this.authService.remove(id);
+    } catch (error) {
+      return 'Error'
+    }
   }
 
   @Post('login')

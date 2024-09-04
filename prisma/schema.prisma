@@ -23,6 +23,8 @@ model User {
 
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt
+
+  Pedidos Pedidos[]
 }
 
 enum Role {
@@ -38,4 +40,33 @@ model Task {
 
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt
+}
+
+model Pedidos {
+  id               String   @id @default(uuid())
+  Status           String
+  Fecha_prestamos  DateTime
+  Fecha_devolucion DateTime
+
+  User    User    @relation(fields: [User_id], references: [id])
+  User_id String
+  Items   Items[]
+}
+
+model Tools {
+  id                  String  @id @default(uuid())
+  Name                String  @unique
+  Cantidad_disponible Int
+  Items               Items[]
+}
+
+model Items {
+  id                String @id @default(uuid())
+  Cantidad_prestada Int
+
+  tools    Tools  @relation(fields: [Tools_id], references: [id])
+  Tools_id String
+
+  pedidos   Pedidos @relation(fields: [Pedido_id], references: [id])
+  Pedido_id String
 }

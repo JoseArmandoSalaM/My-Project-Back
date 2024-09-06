@@ -7,8 +7,8 @@ import { RolesGuard } from 'src/auth/guard/roles.guard';
 import { Auth } from 'src/auth/decorators/auth.decorator';
 import { Role } from 'src/enums/role.enum';
 
-@Auth(Role.USER)
-@UseGuards(AuthGuard, RolesGuard)
+@Auth(Role.USER, Role.ADMIN)
+//@UseGuards(AuthGuard, RolesGuard)
 @Controller('tools')
 export class ToolsController {
   constructor(private readonly toolsService: ToolsService) {}
@@ -24,11 +24,7 @@ export class ToolsController {
 
   @Get()
   async findAll() {
-   const tools = await this.toolsService.findAll();
-
-   if(!tools || tools.length === 0) return 'No hay herramientas';
-   
-   return tools;
+   return await this.toolsService.findAll();
   }
   
   @Get(':id')

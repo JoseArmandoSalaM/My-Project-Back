@@ -59,12 +59,14 @@ export class AuthService {
     })
   }
 
-  async update(id: string, updateAuthDto: UpdateAuthDto) {
+
+  async update(id:string,updateAuthDto: UpdateAuthDto) {
     return await this.prisma.user.update({
-      where: {id},
-      data: updateAuthDto
-    });
+     where: {id},
+     data: updateAuthDto
+   });
   }
+  
 
   async remove(id: string) {
     return this.prisma.user.delete({
@@ -95,7 +97,8 @@ export class AuthService {
     const token = await this.jwtService.signAsync(payload);
     return {
       token,
-      email
+      email,
+      role: user.role,
     };
 
   }
@@ -106,6 +109,7 @@ export class AuthService {
       email
     },
     select:{
+      id: true,
       name: true,
       email: true,
       role: true,

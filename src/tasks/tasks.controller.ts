@@ -1,8 +1,15 @@
-import { Controller, ConflictException,HttpCode, NotFoundException, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, ConflictException,HttpCode, NotFoundException, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { Auth } from 'src/auth/decorators/auth.decorator';
+import { Role } from 'src/enums/role.enum';
+import { AuthGuard } from 'src/auth/guard/auth.guard';
+import { RolesGuard } from 'src/auth/guard/roles.guard';
 
+
+
+//@UseGuards(AuthGuard, RolesGuard)
 @Controller('tasks')
 export class TasksController {
   constructor(private tasksService: TasksService) {}

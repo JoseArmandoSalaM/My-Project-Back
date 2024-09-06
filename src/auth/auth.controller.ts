@@ -1,15 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, NotFoundException} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { LoginDto } from './dto/login-auth';
-import { AuthGuard } from './guard/auth.guard';
-import { Request } from 'express';
 import { Role } from 'src/enums/role.enum';
 import { Auth } from './decorators/auth.decorator';
 import { ActiveUser } from './decorators/active-user.decorator';
 import { UserActiveInterface } from 'src/interfaces/user-active.interface';
-
 
 
 
@@ -18,11 +15,13 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post()
+  @Auth(Role.USER, Role.ADMIN)
   create(@Body() createAuthDto: CreateAuthDto) {
     return this.authService.create(createAuthDto);
   }
 
   @Get()
+  @Auth(Role.USER, Role.ADMIN)
   findAll() {
     return this.authService.findAll();
 
@@ -32,7 +31,7 @@ export class AuthController {
   @Get('profile')
   @Auth(Role.USER, Role.ADMIN)
   // @Roles(Role.ADMIN)
-  // @UseGuards(AuthGuard, RolesGuard)
+  //@UseGuards(AuthGuard, RolesGuard)
   profile(@ActiveUser() user: UserActiveInterface){
     return this.authService.profile(user);
   }
@@ -40,6 +39,7 @@ export class AuthController {
   
   @Get(':id')
   @Auth(Role.USER, Role.ADMIN)
+ //@Auth(Role.USER, Role.ADMIN)
   async findOne(@Param('id') id: string) {
   
     const user =  await this.authService.findOne(id);
@@ -51,11 +51,16 @@ export class AuthController {
 
   @Patch(':id')
   @Auth(Role.USER, Role.ADMIN)
-  update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto, @ActiveUser() user: UserActiveInterface) {
-    return this.authService.update(id, updateAuthDto);
+  async update(@Param('id') id: string,@Body() updateAuthDto: { name: string; email: string }, @ActiveUser() user: UserActiveInterface) {
+   
+     const userData = await this.authService.update(id,updateAuthDto);
+
+    if(!userData) throw new NotFoundException('Falied to update task');
+      return userData;
   }
 
   @Delete(':id')
+  @Auth(Role.USER, Role.ADMIN)
   async remove(@Param('id') id: string) {
     try {
       return await this.authService.remove(id);

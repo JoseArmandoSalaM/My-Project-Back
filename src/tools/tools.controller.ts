@@ -38,7 +38,6 @@ export class ToolsController {
 
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateToolDto: UpdateToolDto) {
-    
     try {
       return await this.toolsService.update(id, updateToolDto);
     } catch (error) {

@@ -9,4 +9,5 @@ export class CreateToolDto {
     @IsInt()
     @IsNotEmpty()
     Cantidad_disponible: number
+
 }

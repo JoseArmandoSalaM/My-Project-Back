@@ -10,15 +10,6 @@ export class ToolsService {
   constructor(private prisma: PrismaService) {}
 
    create(createToolDto: CreateToolDto) {
-
-    if (createToolDto.Cantidad_disponible) {
-      createToolDto.Cantidad_disponible = Number(createToolDto.Cantidad_disponible);
-  
-      // Verificamos si la conversión fue exitosa
-      if (isNaN(createToolDto.Cantidad_disponible)) {
-        throw new Error('Cantidad_disponible debe ser un número válido');
-      }
-    }
      return this.prisma.tools.create({
       data: createToolDto
     })
@@ -37,16 +28,6 @@ export class ToolsService {
   }
 
   update(id: string, updateToolDto: UpdateToolDto) {
-
-      // Convertimos 'Cantidad_disponible' a número si existe y es una cadena
-  if (updateToolDto.Cantidad_disponible) {
-    updateToolDto.Cantidad_disponible = Number(updateToolDto.Cantidad_disponible);
-
-    // Verificamos si la conversión fue exitosa
-    if (isNaN(updateToolDto.Cantidad_disponible)) {
-      throw new Error('Cantidad_disponible debe ser un número válido');
-    }
-  }
     return this.prisma.tools.update({
       where:{id},
       data: updateToolDto

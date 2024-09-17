@@ -1,11 +1,27 @@
 version: '3.8'
 services:
   db:
+    container_name: postgres_database
     image: postgres
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
     restart: always
     environment:
         POSTGRES_USER: armando
         POSTGRES_PASSWORD: 1234567
         POSTGRES_DB: fullstack
     ports:
-      - 5499:5432
+      - 5432:5432
+
+  pgAdmin:
+    depends_on:
+      - db
+    image: dpage/pgadmin4:8.6
+    volumes:
+      - ./pgadmin:/var/lib/pgadmin
+    ports:
+      - "8080:80"
+    environment:
+      - PGADMIN_DEFAULT_PASSWORD=123456
+      - PGADMIN_DEFAULT_EMAIL=superman@google.com
+    restart: always

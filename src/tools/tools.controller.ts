@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, ParseUUIDPipe } from '@nestjs/common';
 import { ToolsService } from './tools.service';
 import { CreateToolDto } from './dto/create-tool.dto';
 import { UpdateToolDto } from './dto/update-tool.dto';
@@ -28,7 +28,7 @@ export class ToolsController {
   }
   
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id', ParseUUIDPipe) id: string) {
     const tool = await this.toolsService.findOne(id);
 
     if(!tool) return 'No se encontro la herramienta';
@@ -37,7 +37,7 @@ export class ToolsController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateToolDto: UpdateToolDto) {
+  async update(@Param('id', ParseUUIDPipe) id: string, @Body() updateToolDto: UpdateToolDto) {
     try {
       return await this.toolsService.update(id, updateToolDto);
     } catch (error) {
@@ -46,7 +46,7 @@ export class ToolsController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
+  async remove(@Param('id', ParseUUIDPipe) id: string) {
     const tool = await this.toolsService.remove(id);
 
     if(!tool) return 'No se puedo eliminar';
